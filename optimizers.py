@@ -4,7 +4,7 @@ from functools import partial
 import numpy as np
 
 # Numerical stabilizer
-DELTA = 1e-6
+DELTA = 1e-8
 
 class ForwardSGD():
   def __init__(self, fmodel, criterion, params, lr=2e-4, momentum=0, nesterov=False, learning=True, decay = 1e-4):
@@ -100,4 +100,46 @@ class ForwardRMSprop():
 
       self.lr = self.lr0*np.exp(-self.steps*self.decay)
       
+      return self.params, loss
+
+class ForwardAdam():
+  def __init__(self, fmodel, criterion, params, lr=0.001, betas=(0.9, 0.999), decay=1e-4):
+    self.fmodel = fmodel
+    self.criterion = criterion
+    self.params = params
+    self.lr0 = lr
+    self.lr = lr
+    self.b1 = betas[0]
+    self.b2 = betas[1]
+    self.decay = decay
+    self.steps = 0
+    self.moment1 = tuple([torch.zeros_like(p) for p in self.params])
+    self.moment2 = tuple([torch.zeros_like(p) for p in self.params])
+
+  def step(self, image, label):
+    self.steps += 1
+    with torch.no_grad():
+      tangents = tuple([torch.randn_like(p) for p in self.params])
+
+      f = partial(
+          self.criterion, 
+          fmodel=self.fmodel,
+          x=image,
+          t=label
+      )
+      loss, jvp = ft.jvp(f, (self.params, ), (tangents, ))
+
+      gradients = tuple([jvp * t for t in tangents])
+      
+      # Update moments, and normalize
+      self.moment1 = tuple([self.b1 * m1 + (1 - self.b1) * g for m1, g in zip(self.moment1, gradients)])
+      self.moment2 = tuple([self.b2 * m2 + (1 - self.b2) * g * g for m2, g in zip(self.moment2, gradients)])
+      normalized_m1 = tuple([m1 / (1 - self.b1 ** self.steps) for m1 in self.moment1])
+      normalized_m2 = tuple([m2 / (1 - self.b2 ** self.steps) for m2 in self.moment2])
+
+      self.params = tuple([
+        p - self.lr * m1 / torch.sqrt(m2 + DELTA) for p, m1, m2 in zip(*[self.params, normalized_m1, normalized_m2])
+      ])
+      self.lr = self.lr0*np.exp(-self.steps*self.decay)
+
       return self.params, loss
