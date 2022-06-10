@@ -1,3 +1,8 @@
+import torch
+import functorch as ft
+from functools import partial
+
+
 class forwardSGD():
   def __init__(self, function, criterion, params, lr=2e-4, momentum=False, learning=True, decay = 1e-4):
     self.lr = lr
