@@ -7,11 +7,11 @@ import numpy as np
 DELTA = 1e-6
 
 class ForwardSGD():
-  def __init__(self, function, criterion, params, lr=2e-4, momentum=0, nesterov=False, learning=True, decay = 1e-4):
+  def __init__(self, fmodel, criterion, params, lr=2e-4, momentum=0, nesterov=False, learning=True, decay = 1e-4):
     self.lr = lr
     self.original_lr = lr
     self.momentum = momentum
-    self.function = function
+    self.function = fmodel
     self.params = params
     self.criterion = criterion
     self.learning = learning
@@ -30,7 +30,7 @@ class ForwardSGD():
       # Calculate f and jvp
       f = partial(
             self.criterion,
-            fmodel=self.function,
+            fmodel=self.fmodel,
             x=image,
             t=label
       )
