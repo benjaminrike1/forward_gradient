@@ -7,14 +7,13 @@ import numpy as np
 DELTA = 1e-8
 
 class ForwardSGD():
-  def __init__(self, fmodel, criterion, params, lr=2e-4, momentum=0, nesterov=False, learning=True, decay = 1e-4):
+  def __init__(self, fmodel, criterion, params, lr=2e-4, momentum=0, nesterov=False, decay = 1e-4):
     self.lr = lr
     self.original_lr = lr
     self.momentum = momentum
     self.function = fmodel
     self.params = params
     self.criterion = criterion
-    self.learning = learning
     self.steps = 0
     self.decay = decay
     self.nesterov = nesterov
