@@ -1,6 +1,7 @@
 import torch
 import functorch as ft
 from functools import partial
+import numpy as np
 
 
 class forwardSGD():
