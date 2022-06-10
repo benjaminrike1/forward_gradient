@@ -9,7 +9,6 @@ def plot_loss(losses, steps):
     ax.set_title("f(x) by steps")
     ax.set_xlabel('Steps')
     ax.set_ylabel('f(x)')
-    print(losses)
     sns.lineplot(x=X, y=losses, ax=ax)
 
 def plot_countour(loss, params, func, xlim, ylim):
