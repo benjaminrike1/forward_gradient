@@ -3,6 +3,8 @@
 
 import torch
 from typing import Callable, Tuple
+import torch.nn.functional as F
+
 
 
 def functional_xent(

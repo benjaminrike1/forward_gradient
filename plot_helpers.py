@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
+import torch
+import numpy as np
 
 def plot_loss(losses, steps):
     fig, ax = plt.subplots(1,1, figsize=(15, 8))
