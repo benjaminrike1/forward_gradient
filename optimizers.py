@@ -11,7 +11,7 @@ class ForwardSGD():
     self.lr = lr
     self.original_lr = lr
     self.momentum = momentum
-    self.function = fmodel
+    self.fmodel = fmodel
     self.params = params
     self.criterion = criterion
     self.steps = 0
