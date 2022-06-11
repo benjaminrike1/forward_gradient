@@ -7,7 +7,7 @@ import numpy as np
 DELTA = 1e-8
 
 class ForwardSGD():
-  def __init__(self, fmodel, criterion, params, lr=2e-4, momentum=0, nesterov=False, decay = 1e-4):
+  def __init__(self, fmodel, criterion, params, lr=2e-4, momentum=0, nesterov=False, decay = 1e-4, clip = False):
     self.lr = lr
     self.original_lr = lr
     self.momentum = momentum
@@ -16,6 +16,7 @@ class ForwardSGD():
     self.criterion = criterion
     self.steps = 0
     self.decay = decay
+    self.clip = clip
     self.nesterov = nesterov
     if momentum > 0:
       self.velocities = tuple([torch.zeros_like(param) for param in self.params])
@@ -41,6 +42,11 @@ class ForwardSGD():
         look_ahead_params = tuple([param - self.momentum * prev_v for param, prev_v in zip(self.params, self.velocities)])
         loss, jvp = ft.jvp(f, (look_ahead_params, ), (tangents, ))
       
+      if self.clip and (self.clip<torch.abs(jvp)):
+        if self.clip < jvp:
+          jvp = self.clip
+        else:
+          jvp = -self.clip
       gradients = [jvp * t for t in tangents]
 
       # Velocity update
@@ -102,7 +108,7 @@ class ForwardRMSprop():
       return self.params, loss
 
 class ForwardAdam():
-  def __init__(self, fmodel, criterion, params, lr=0.001, betas=(0.9, 0.999), decay=1e-4):
+  def __init__(self, fmodel, criterion, params, lr=0.001, betas=(0.9, 0.999), decay=1e-4, clip = False):
     self.fmodel = fmodel
     self.criterion = criterion
     self.params = params
@@ -112,6 +118,7 @@ class ForwardAdam():
     self.b2 = betas[1]
     self.decay = decay
     self.steps = 0
+    self.clip = clip
     self.moment1 = tuple([torch.zeros_like(p) for p in self.params])
     self.moment2 = tuple([torch.zeros_like(p) for p in self.params])
 
@@ -127,6 +134,12 @@ class ForwardAdam():
           t=label
       )
       loss, jvp = ft.jvp(f, (self.params, ), (tangents, ))
+
+      if self.clip and (self.clip<torch.abs(jvp)):
+        if self.clip < jvp:
+          jvp = self.clip
+        else:
+          jvp = -self.clip
 
       gradients = tuple([jvp * t for t in tangents])
       
