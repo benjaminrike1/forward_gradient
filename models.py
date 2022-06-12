@@ -52,7 +52,7 @@ class LogisticRegression(nn.Module):
     return outputs
 
 
-class CifarNet(nn.module):
+class CifarNet(nn.Module):
   def __init__(self):
       super(ConvNet, self).__init__()
       self.conv1 = nn.Conv2d(3, 32, 3)
