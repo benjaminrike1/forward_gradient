@@ -58,7 +58,7 @@ class ForwardSGD():
       self.params = tuple([param - g * self.lr for param, g in zip(self.params, gradients)])
       self.lr = self.original_lr*np.exp(-self.steps*self.decay)
 
-      return self.params, loss
+      return self.params, loss, jvp
 
 
 class ForwardRMSprop():
