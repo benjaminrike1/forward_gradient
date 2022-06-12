@@ -7,7 +7,7 @@ import numpy as np
 DELTA = 1e-8
 
 class ForwardSGD():
-  def __init__(self, fmodel, criterion, params, lr=2e-4, momentum=0, nesterov=False, decay = 1e-4, clip = False):
+  def __init__(self, fmodel, criterion, params, lr=2e-4, momentum=0, nesterov=False, decay = 1e-6, clip = False):
     self.lr = lr
     self.original_lr = lr
     self.momentum = momentum
@@ -39,7 +39,7 @@ class ForwardSGD():
         loss, jvp = ft.jvp(f, (self.params, ), (tangents, ))
       else :
         # Calculate gradient from position obtained by taking momentum step
-        look_ahead_params = tuple([param - self.momentum * prev_v for param, prev_v in zip(self.params, self.velocities)])
+        look_ahead_params = tuple([param + self.momentum * prev_v for param, prev_v in zip(self.params, self.velocities)])
         loss, jvp = ft.jvp(f, (look_ahead_params, ), (tangents, ))
       
       if self.clip and (self.clip<torch.abs(jvp)):
@@ -51,11 +51,12 @@ class ForwardSGD():
 
       # Velocity update
       if self.momentum > 0:
-        self.velocities = tuple([self.momentum * v + g for v, g in zip(self.velocities, gradients)])
+        self.velocities = tuple([self.momentum * v - self.lr*g for v, g in zip(self.velocities, gradients)])
         gradients = self.velocities
-      
+        self.params = tuple([param + v for param, v in zip(self.params, self.velocities)])
+      else:
       # Param + LR update
-      self.params = tuple([param - g * self.lr for param, g in zip(self.params, gradients)])
+        self.params = tuple([param - g * self.lr for param, g in zip(self.params, gradients)])
       self.lr = self.original_lr*np.exp(-self.steps*self.decay)
 
       return self.params, loss, jvp
