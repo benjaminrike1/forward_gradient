@@ -8,7 +8,7 @@ Training deep naural networks is a resource- and time-consuming process. The net
 
 __How to reproduce the experiements__
 
-The code used for reproducing experiements can be found in the files: `MNIST.ipynb`and `CIFAR.ipynb`. The notebooks are made to be run on GPU in Google Colab, but can with minor modifications be run locally. The notebooks require `functorch` to run the forward mode autodifferentiation used in the forward gradients and this must be installed if run locally. As a disclaimer, we encountered trouble running `functorch`on Windows and Mac with M1 chip, and therefore reccomend using Google Colab. \\
+The code used for reproducing experiements can be found in the files: `MNIST.ipynb`and `CIFAR.ipynb`. The notebooks are made to be run on GPU in Google Colab, but can with minor modifications be run locally. The notebooks require `functorch` to run the forward mode autodifferentiation used in the forward gradients and this must be installed if run locally. As a disclaimer, we encountered trouble running `functorch`on Windows and Mac with M1 chip, and therefore reccomend using Google Colab.
 
 __Implementation__
 
