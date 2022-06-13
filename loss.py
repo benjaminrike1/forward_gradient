@@ -1,10 +1,9 @@
-# functorch implementations of torch functions
-# from: https://github.com/orobix/fwdgrad
+"""functorch implementations of torch loss functions which are not implemented in functorch yet.
+Copied verbatim from: https://github.com/orobix/fwdgrad"""
 
 import torch
 from typing import Callable, Tuple
 import torch.nn.functional as F
-
 
 
 def functional_xent(

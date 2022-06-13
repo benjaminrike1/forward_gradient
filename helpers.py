@@ -1,4 +1,6 @@
 #@title ## Imports
+"""Helper function for optimizing optimization test functions."""
+
 import os
 import numpy as np
 import math
@@ -9,8 +11,8 @@ import torch
 import seaborn as sns
 import functorch as ft
 
-# helpers
 def optimize(loss_func, params, steps, optimizer=None, lr = 3e-4):
+    """ Takes as input a loss function and parameters and optimizes the function."""
     losses = []
     grads = []
     parameters = []
