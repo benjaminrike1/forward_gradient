@@ -12,7 +12,7 @@ The code used for reproducing experiements can be found in the files: `MNIST.ipy
 
 __Implementation__
 
-The implementation of the forward gradient optimization algorithms can be found in `optimizers.py`. We have implemented SGD and SGD with Nesterov momentum in the ForwardSGD class, RMSProp and Adam. The models used can be found in `models.py`. There are three nets, 1) Net, the vanilla neural network used on MNIST, 2) ConvNet, the convolutional net used on MNIST, 3) CifarNet, the convolutional net used on CIFAR-10. 
+The implementation of the forward gradient optimization algorithms can be found in `optimizers.py`. We have implemented SGD and SGD with Nesterov momentum in the ForwardSGD class and Adam in the ForwardAdam class. The models used can be found in `models.py`. There are three nets, 1) Net, the vanilla neural network used on MNIST, 2) ConvNet, the convolutional net used on MNIST, 3) CifarNet, the convolutional net used on CIFAR-10. 
 
 __Contributors__:
 
