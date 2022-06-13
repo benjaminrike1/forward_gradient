@@ -1,9 +1,12 @@
+"""Collection of helper functions used to study the behavior of the forward gradient on 
+optimization test functions. """
 import matplotlib.pyplot as plt
 import seaborn as sns
 import torch
 import numpy as np
 
 def plot_loss(losses, steps):
+    "Plots the function value per step"
     fig, ax = plt.subplots(1,1, figsize=(15, 8))
     X = [i for i in range(steps)]
     ax.set_title("f(x) by steps")
@@ -11,42 +14,11 @@ def plot_loss(losses, steps):
     ax.set_ylabel('f(x)')
     sns.lineplot(x=X, y=losses, ax=ax)
 
-def plot_countour(loss, params, func, xlim, ylim):
-  x_0, x_1 = xlim
-  y_0, y_1 = ylim
-
-  w0 = [params[i] for i in range(0, len(params), 2)]
-  w1 = [params[i] for i in range(1, len(params), 2)]
-
-
-  old_w = np.asarray([(e_0, e_1) for e_0, e_1 in zip(w0, w1)])
-
-  w0 = torch.linspace(x_0, x_1, 1000)
-  w1 = torch.linspace(y_0, y_1, 1000)
-
-  W0, W1 = torch.meshgrid(w0, w1)
-  f_s = func((W0, W1))
-
-  plt.figure(figsize=(8, 8), dpi=80)
-  plt.contourf(w0, w1, f_s,alpha=.7)
-  plt.axhline(0, color='black', alpha=.5, dashes=[2, 4],linewidth=1)
-  plt.axvline(0, color='black', alpha=0.5, dashes=[2, 4],linewidth=1)
-  for i in range(len(old_w) - 1):
-      plt.annotate('', xy=old_w[i + 1, :], xytext=old_w[i, :],
-                  arrowprops={'arrowstyle': '->', 'color': 'r', 'lw': 1},
-                  va='center', ha='center')
-  
-  CS = plt.contour(w0, w1, f_s, linewidths=1,colors='black')
-  plt.clabel(CS, inline=1, fontsize=8)
-  plt.title("Contour Plot of Gradient Descent")
-  plt.xlim(x_0, x_1)
-  plt.ylim(y_0, y_1)
-  plt.xlabel("w0")
-  plt.ylabel("w1")
-  plt.show()
-
 
 def plot_contour2(loss, params, func, xlim, ylim):
+    """Plots a countour plot and 3D plot of a function, its losses and the parameter history.
+    Loss should be a list of losses per iteration, params a list of tuples of parameters per iteration,
+    and func a callable function."""
     x0, x1 = xlim
     y0, y1 = ylim
     w0 = [params[i] for i in range(0, len(params), 2)]
